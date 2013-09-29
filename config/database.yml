@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  host: 127.0.0.1
+  database: cobot_ical_sync_development
+test:
+  adapter: postgresql
+  host: 127.0.0.1
+  database: cobot_ical_sync_test
