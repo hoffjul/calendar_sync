@@ -37,6 +37,7 @@ GEM
     hashie (2.0.5)
     httpauth (0.2.0)
     i18n (0.6.5)
+    icalendar (1.4.3)
     json (1.8.0)
     jwt (0.1.8)
       multi_json (>= 1.5)
@@ -114,6 +115,7 @@ DEPENDENCIES
   activerecord
   capybara
   database_cleaner
+  icalendar
   json
   launchy
   omniauth

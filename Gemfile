@@ -12,7 +12,7 @@ gem 'sentry-raven'
 gem 'sinatra-activerecord'
 gem 'omniauth'
 gem 'omniauth_cobot'
-gem 'capybara'
+gem 'icalendar'
 
 group :production do
   gem 'thin'
@@ -27,4 +27,5 @@ group :test do
   gem 'webmock'
   gem 'database_cleaner'
   gem 'launchy'
+  gem 'capybara'
 end

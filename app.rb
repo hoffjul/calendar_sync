@@ -11,6 +11,7 @@ require_relative 'lib/space'
 require_relative 'lib/resource'
 require_relative 'lib/synchronization'
 require_relative 'lib/cobot_client'
+require_relative 'lib/sync_service'
 
 class CobotIcalSync < Sinatra::Base
   configure(:production) do
@@ -103,8 +104,10 @@ class CobotIcalSync < Sinatra::Base
   end
 
   post '/spaces/:subdomain/synchronization' do
+    space = current_user.space(params[:subdomain])
     Synchronization.create! ics_url: params[:ics_url], resource_id: params[:resource_id],
-      subdomain: current_user.space(params[:subdomain]).subdomain
+      subdomain: space.subdomain,
+      access_token: space.access_token
     redirect "/spaces/#{params[:subdomain]}"
   end
 
@@ -114,19 +117,7 @@ class CobotIcalSync < Sinatra::Base
     redirect "/spaces/#{sync.subdomain}"
   end
 
-  # error Sinatra::NotFound do
-  #   [404, {error: 'not found'}.to_json]
-  # end
-
-  # error do
-  #   [500, 'Unexpected error. We have already been notified.']
-  # end
-
   helpers do
-    def cobot_client
-      CobotClient.new(@space.cobot_access_token)
-    end
-
     def current_user
       User.new session[:user] if session[:user]
     end

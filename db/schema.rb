@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130929174849) do
+ActiveRecord::Schema.define(version: 20130930114954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20130929174849) do
     t.string "ics_url"
     t.string "resource_id"
     t.string "subdomain"
+    t.string "access_token"
   end
 
 end

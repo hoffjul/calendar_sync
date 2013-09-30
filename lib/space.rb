@@ -15,11 +15,15 @@ class Space
     end
   end
 
+  def access_token
+    @attributes[:access_token]
+  end
+
   def subdomain
     @attributes[:space_subdomain]
   end
 
   def resources
-    @resources ||= CobotClient.new(@attributes[:access_token]).get(subdomain, '/resources').map{|r| Resource.new(r) }
+    @resources ||= CobotClient.new(access_token).get_resources(subdomain).map{|r| Resource.new(r) }
   end
 end
