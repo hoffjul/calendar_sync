@@ -34,6 +34,13 @@ class CobotIcalSync < Sinatra::Base
 
   register Sinatra::ActiveRecordExtension
 
+  before do
+    if !current_user &&
+      [%r{^/health$}, %r{^/auth/*}, %r{^/$}].none?{|regex| request.path_info =~ regex}
+      redirect '/'
+    end
+  end
+
   get '/health' do
     status 200
   end
