@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130930114954) do
+ActiveRecord::Schema.define(version: 20130930171909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookings", force: true do |t|
+    t.integer  "synchronization_id"
+    t.string   "cobot_id"
+    t.string   "uid"
+    t.datetime "from"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "synchronizations", force: true do |t|
     t.string "ics_url"

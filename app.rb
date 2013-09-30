@@ -5,13 +5,9 @@ require 'sinatra'
 require 'sinatra/activerecord'
 require 'omniauth/strategies/cobot'
 
-require_relative 'lib/configure_raven'
-require_relative 'lib/user'
-require_relative 'lib/space'
-require_relative 'lib/resource'
-require_relative 'lib/synchronization'
-require_relative 'lib/cobot_client'
-require_relative 'lib/sync_service'
+Dir['lib/*.rb'].each do |file|
+  require_relative file
+end
 
 class CobotIcalSync < Sinatra::Base
   configure(:production) do

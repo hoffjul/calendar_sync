@@ -28,4 +28,5 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'capybara'
+  gem 'timecop'
 end
