@@ -13,6 +13,7 @@ gem 'sinatra-activerecord'
 gem 'omniauth'
 gem 'omniauth_cobot'
 gem 'icalendar'
+gem 'cobot_client', '~>0.5.0'
 
 group :production do
   gem 'thin'
@@ -20,6 +21,7 @@ end
 
 group :development do
   gem 'rspec'
+  gem 'foreman'
 end
 
 group :test do

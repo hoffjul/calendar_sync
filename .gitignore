@@ -16,3 +16,4 @@
 /tmp
 
 capybara*.html
+.DS_Store

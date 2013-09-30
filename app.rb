@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'omniauth/strategies/cobot'
+require 'cobot_client'
 
 Dir['lib/*.rb'].each do |file|
   require_relative file

@@ -24,6 +24,6 @@ class Space
   end
 
   def resources
-    @resources ||= CobotClient.new(access_token).get_resources(subdomain).map{|r| Resource.new(r) }
+    @resources ||= CobotClient::ApiClient.new(access_token).get_resources(subdomain).map{|r| Resource.new(r) }
   end
 end

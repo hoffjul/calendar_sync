@@ -19,6 +19,7 @@ GEM
     addressable (2.2.8)
     arel (4.0.0)
     atomic (1.1.13)
+    backports (2.6.7)
     builder (3.1.4)
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -26,14 +27,23 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    cobot_client (0.5.0)
+      activesupport
+      json
+      oauth2
+      rest-client
+      virtus
     crack (0.4.1)
       safe_yaml (~> 0.9.0)
     daemons (1.1.9)
     database_cleaner (1.1.1)
+    descendants_tracker (0.0.1)
     diff-lcs (1.2.4)
     eventmachine (1.0.3)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
+    foreman (0.60.2)
+      thor (>= 0.13.6)
     hashie (2.0.5)
     httpauth (0.2.0)
     i18n (0.6.5)
@@ -97,12 +107,16 @@ GEM
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
+    thor (0.16.0)
     thread_safe (0.1.2)
       atomic
     tilt (1.4.1)
     timecop (0.3.5)
     tzinfo (0.3.37)
     uuidtools (2.1.4)
+    virtus (0.5.4)
+      backports (~> 2.6.1)
+      descendants_tracker (~> 0.0.1)
     webmock (1.13.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
@@ -115,7 +129,9 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   capybara
+  cobot_client (~> 0.5.0)
   database_cleaner
+  foreman
   icalendar
   json
   launchy

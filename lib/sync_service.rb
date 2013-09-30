@@ -56,6 +56,6 @@ class SyncService
   end
 
   def cobot(synchronization)
-    CobotClient.new(synchronization.access_token)
+    CobotClient::ApiClient.new(synchronization.access_token)
   end
 end
