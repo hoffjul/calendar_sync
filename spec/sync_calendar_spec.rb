@@ -12,10 +12,7 @@ describe 'syncing a calendar' do
   end
 
   it 'adds new bookings' do
-    stub_request(:get, 'http://example.org/example.ics')
-      .to_return(body: File.read('spec/fixtures/example.ics'))
-
-    SyncService.new.sync_all
+    sync_ics 'example.ics'
 
     expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')
       .with(
@@ -29,21 +26,40 @@ describe 'syncing a calendar' do
   it 'removes removed bookings' do
     Timecop.travel 2013, 9, 20 do
       stub_request(:delete, %r{api/bookings})
-      stub_request(:get, 'http://example.org/example.ics')
-        .to_return(body: File.read('spec/fixtures/example.ics'))
-      SyncService.new.sync_all
-
-      stub_request(:get, 'http://example.org/example.ics')
-        .to_return(body: File.read('spec/fixtures/empty.ics'))
-
-      SyncService.new.sync_all
+      sync_ics 'example.ics'
+      sync_ics 'empty.ics'
 
       expect(a_request(:delete, 'https://co-up.cobot.me/api/bookings/booking-123')
         .with(headers: {'Authorization' => 'Bearer token-123'})).to have_been_made
     end
   end
 
-  it 'does not remove past bookings'
+  it 'does not remove past bookings' do
+    sync_ics 'example.ics'
+    sync_ics 'empty.ics'
 
-  it 'updates changed booings'
+    expect(a_request(:delete, 'https://co-up.cobot.me/api/bookings/booking-123')).to_not have_been_made
+  end
+
+  it 'updates changed bookings' do
+    stub_request(:put, %r{api/bookings}).to_return(body: '{}')
+    sync_ics 'example.ics'
+    sync_ics 'changed.ics'
+
+    expect(a_request(:put, 'https://co-up.cobot.me/api/bookings/booking-123')
+      .with(
+        body: {
+          from: '2013-09-30T09:00:00+00:00',
+          to: '2013-09-30T10:00:00+00:00',
+          title: 'Very important meeting'
+        },
+        headers: {'Authorization' => 'Bearer token-123'})
+    ).to have_been_made
+  end
+
+  def sync_ics(filename)
+    stub_request(:get, 'http://example.org/example.ics')
+      .to_return(body: File.read("spec/fixtures/#{filename}"))
+    SyncService.new.sync_all
+  end
 end

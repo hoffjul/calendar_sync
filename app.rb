@@ -34,30 +34,6 @@ class CobotIcalSync < Sinatra::Base
 
   register Sinatra::ActiveRecordExtension
 
-  # before('/spaces/:subdomain/*') do
-  #   @space = Space.where(subdomain: params[:subdomain]).first!
-  #   token = env['HTTP_X_COBOT_ACCESS_TOKEN']
-  #   if token.blank?
-  #     halt 401, {error: 'X-Cobot-Access-Token header missing.'}.to_json
-  #   elsif @space.access_token != token
-  #     halt 401, {error: 'Invalid access token.'}.to_json
-  #   end
-  # end
-
-  # before do
-  #   body = request.body.read
-  #   request.body.rewind
-  #   params.merge! Hash[::URI.decode_www_form(body)]
-  # end
-
-  # post "/spaces/:subdomain/authentication" do
-  #   if cobot_client.check_in(params[:subdomain], params[:email], params[:password])
-  #     status 204
-  #   else
-  #     status 403
-  #   end
-  # end
-
   get '/health' do
     status 200
   end
@@ -65,22 +41,6 @@ class CobotIcalSync < Sinatra::Base
   get '/' do
     erb :home
   end
-
-  # get "/spaces/:subdomain/users/:email" do
-  #   membership = @space.membership(params[:email])
-  #   if membership && (membership[:canceled_to].nil? || Date.parse(membership[:canceled_to]).future?)
-  #     {
-  #       name: membership[:address][:name],
-  #       company: membership[:address][:company],
-  #       plan: membership[:plan][:name],
-  #       email: membership[:user][:email],
-  #       expiration: membership[:canceled_to] && Time.parse("#{membership[:canceled_to]} 00:00:00 +0000").to_i,
-  #       photo: membership[:picture]
-  #     }.to_json
-  #   else
-  #     [404, {error: 'No user found.'}.to_json]
-  #   end
-  # end
 
   get '/auth/:provider/callback' do
     session[:user] = auth_hash

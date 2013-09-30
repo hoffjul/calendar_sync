@@ -13,11 +13,20 @@ class CobotClient
     post subdomain, "/resources/#{resource_id}/bookings", attributes
   end
 
+  def update_booking(subdomain, id, attributes)
+    put subdomain, "/bookings/#{id}", attributes
+  end
+
   def delete_booking(subdomain, id)
     delete subdomain, "/bookings/#{id}"
   end
 
   private
+
+  def put(subdomain, path, params)
+    JSON.parse RestClient.put("https://#{subdomain}.cobot.me/api#{path}", params, auth_headers),
+      symbolize_names: true
+  end
 
   def delete(subdomain, path)
     RestClient.delete("https://#{subdomain}.cobot.me/api#{path}", auth_headers)
