@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'syncing a calendar' do
   before(:each) do
     stub_cobot_user credentials: {token: 'token-123'},
-      admin_of: [{space_subdomain: 'co-up', space_name: 'co.up'}]
+      extra: {raw_info: {admin_of: [{space_subdomain: 'co-up', space_name: 'co.up'}]}}
     stub_cobot_resources 'co-up', [{id: 'meeting-room', name: 'Meeting Room'}]
     stub_request(:post, %r{api/resources/meeting-room/bookings}).to_return(
       body: {id: 'booking-123'}.to_json)

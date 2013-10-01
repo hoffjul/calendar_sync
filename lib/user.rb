@@ -4,7 +4,7 @@ class User
   end
 
   def admin_of
-    @attributes[:admin_of].map{|a| Space.new(a.merge(access_token: access_token))}
+    @attributes[:extra][:raw_info][:admin_of].map{|a| Space.new(a.merge(access_token: access_token))}
   end
 
   def admin_of?(subdomain)

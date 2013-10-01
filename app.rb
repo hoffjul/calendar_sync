@@ -11,6 +11,7 @@ Dir['lib/*.rb'].each do |file|
 end
 
 class CobotIcalSync < Sinatra::Base
+  layout 'layout'
   configure(:production) do
     set :cookie_secret, ENV['COOKIE_SECRET']
     use Raven::Rack
@@ -18,6 +19,9 @@ class CobotIcalSync < Sinatra::Base
 
   configure(:development) do
     set :cookie_secret, '1'
+    CobotClient::UrlHelper.site = ENV['COBOT_SITE']
+    OmniAuth::Strategies::Cobot.option :client_options, site: ENV['COBOT_SITE'],
+      token_url: '/oauth/access_token'
   end
 
   configure(:test) do

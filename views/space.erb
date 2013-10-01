@@ -1,34 +1,44 @@
 <% if @synchronizations.any? %>
   <h2>Synchronized Calendars</h2>
-  <ul>
-    <% @synchronizations.each do |synchronization| %>
-      <li>
-        <%= synchronization.resource_name %>
+  <p>Below you see a list of calendars that are being synchronized to Cobot. </p>
+  <% @synchronizations.each do |synchronization| %>
+    <div class="row">
+      <div class="span4">
+        <strong><%= synchronization.resource_name %></strong>
+      </div>
+      <div class="span4">
+        <p><input readonly value="<%= synchronization.ics_url %>" class="span4"/></p>
+      </div>
+      <div class="span2">
         <form action="/synchronizations/<%= synchronization.id %>" method="POST">
           <input type="hidden" name="_method" value="DELETE"/>
-          <input type="submit" value="Stop syncing"/>
+          <input type="submit" value="Stop syncing" class="btn btn-mini btn-danger"/>
         </form>
-      </li>
-    <% end %>
-  </ul>
+      </div>
+    </div>
+  <% end %>
 <% end %>
 
 <h2>Add Calendar</h2>
 
-<form action="/spaces/<%= @space.subdomain %>/synchronization" method="POST">
-  <div>
-    <label for="ics_url">Calendar URL</label>
-    <input type="text" id="ics_url" name="ics_url"/>
-  </div>
+<p>After filling out the form below we will start synchonizing the events from your calendar to the specified resource on your Cobot booking calendar.</p>
 
-  <div>
+<form action="/spaces/<%= @space.subdomain %>/synchronization" method="POST">
+  <p>
+    <label for="ics_url">Calendar URL</label>
+    <input type="url" required id="ics_url" name="ics_url"/>
+    <span class="hint">The URL to an ics feed. On Google Calendar you can find it under <em>Calendar Settings</em>.</span>
+  </p>
+
+  <p>
     <label for="resource_id">Resource</label>
-    <select id="resource_id" name="resource_id">
+    <select id="resource_id" name="resource_id" required>
       <% @resources.each do |resource| %>
         <option value="<%= resource.id %>"><%= resource.name %></option>
       <% end %>
     </select>
-  </div>
+    <span class="hint">Select the booking calendar resource to add the bookings to.</span>
+  </p>
 
-  <input type="submit" value="Sync Calendar"/>
+  <p><input type="submit" class="btn btn-primary" value="Sync Calendar"/></p>
 </form>

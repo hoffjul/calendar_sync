@@ -3,7 +3,11 @@ require 'spec_helper'
 describe 'enable syncing' do
   before(:each) do
     stub_cobot_user credentials: {token: 'token-123'},
-      admin_of: [{space_subdomain: 'co-up', space_name: 'co.up'}]
+      extra: {
+        raw_info: {
+          admin_of: [{space_subdomain: 'co-up', space_name: 'co.up'}]
+        }
+      }
     stub_cobot_resources 'co-up', [{name: 'Meeting Room'}]
   end
 

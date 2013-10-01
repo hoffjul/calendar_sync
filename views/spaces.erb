@@ -1,3 +1,13 @@
-<% @spaces.each do |space| %>
-  <a href="/spaces/<%= space.subdomain %>"><%= space.name %></a>
+<h1>Select Space</h1>
+
+<p>Space select the space you want to set up a calendar for.</p>
+
+<% if @spaces.any? %>
+  <ul class="list">
+    <% @spaces.each do |space| %>
+      <li><a href="/spaces/<%= space.subdomain %>"><%= space.name %></a></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="alert">Sorry you are not an admin of any space.</p>
 <% end %>
