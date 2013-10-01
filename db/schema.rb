@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130930171909) do
+ActiveRecord::Schema.define(version: 20131001153920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20130930171909) do
     t.datetime "from"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "title"
+    t.datetime "to"
   end
 
   create_table "synchronizations", force: true do |t|

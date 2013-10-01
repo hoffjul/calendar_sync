@@ -28,15 +28,18 @@ class SyncService
   end
 
   def update_booking(sync, event, booking)
-    cobot(sync).update_booking sync.subdomain, booking.cobot_id,
-      booking_attributes(event)
+    if booking.event_changed?(event)
+      cobot(sync).update_booking sync.subdomain, booking.cobot_id,
+        booking_attributes(event)
+      booking.update_attributes booking_attributes(event)
+    end
   end
 
   def create_booking(sync, event)
     cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
       booking_attributes(event)
-    sync.bookings.create! cobot_id: cobot_booking[:id], uid: event.uid,
-      from: event.start
+    sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
+      }.merge(booking_attributes(event)))
   end
 
   def booking_attributes(event)

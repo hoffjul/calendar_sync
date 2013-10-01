@@ -57,6 +57,14 @@ describe 'syncing a calendar' do
     ).to have_been_made
   end
 
+  it 'does not update unchanged bookings' do
+    stub_request(:put, %r{api/bookings}).to_return(body: '{}')
+    2.times { sync_ics 'example.ics' }
+
+    expect(a_request(:put,
+      'https://co-up.cobot.me/api/bookings/booking-123')).to_not have_been_made
+  end
+
   def sync_ics(filename)
     stub_request(:get, 'http://example.org/example.ics')
       .to_return(body: File.read("spec/fixtures/#{filename}"))
