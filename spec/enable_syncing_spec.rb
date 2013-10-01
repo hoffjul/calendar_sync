@@ -9,16 +9,23 @@ describe 'enable syncing' do
         }
       }
     stub_cobot_resources 'co-up', [{name: 'Meeting Room'}]
+    log_in
+    stub_ics
   end
 
-  it 'lets a space admin log in and enable a space' do
-    log_in
-
+  it 'lets a space admin enable a space' do
     enable_sync 'co.up'
   end
 
+  it 'shows an error when the url does not return an ics file' do
+    stub_request(:get, 'http://example.com/invalid.csv').to_return(
+      body: 'abc;xyz')
+    enable_sync 'co.up', ics_url: 'http://example.com/invalid.csv'
+
+    expect(page).to have_content('The URL you entered is not a valid calendar file.')
+  end
+
   it 'lets a space admin disable a space' do
-    log_in
     enable_sync 'co.up'
 
     visit '/spaces/co-up'

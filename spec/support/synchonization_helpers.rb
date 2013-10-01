@@ -6,6 +6,11 @@ module SynchronizationHelpers
     select 'Meeting Room', from: 'Resource'
     click_button 'Sync Calendar'
   end
+
+  def stub_ics
+    stub_request(:get, 'http://example.org/example.ics').to_return(
+      body: File.read('spec/fixtures/example.ics'))
+  end
 end
 
 RSpec.configure do |c|

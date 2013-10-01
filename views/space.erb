@@ -23,16 +23,20 @@
 
 <p>After filling out the form below we will start synchonizing the events from your calendar to the specified resource on your Cobot booking calendar.</p>
 
+<% if @error %>
+  <p class="alert alert-error"><%= @error %></p>
+<% end %>
+
 <% if @resources.any? %>
   <form action="/spaces/<%= @space.subdomain %>/synchronization" method="POST">
     <p>
       <label for="ics_url">Calendar URL</label>
-      <input type="url" required id="ics_url" name="ics_url"/>
+      <input type="url" required id="ics_url" name="ics_url" value="<%= params[:ics_url] %>"/>
       <span class="hint">The URL to an ics feed. <a href="/help">help</a></span>
     </p>
     <p>
       <label for="resource_id">Resource</label>
-      <select id="resource_id" name="resource_id" required>
+      <select id="resource_id" name="resource_id" value="<%= params[:resource_id] %>" required>
         <% @resources.each do |resource| %>
           <option value="<%= resource.id %>"><%= resource.name %></option>
         <% end %>

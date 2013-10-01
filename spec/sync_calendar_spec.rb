@@ -8,6 +8,7 @@ describe 'syncing a calendar' do
     stub_request(:post, %r{api/resources/meeting-room/bookings}).to_return(
       body: {id: 'booking-123'}.to_json)
     log_in
+    stub_ics
     enable_sync 'co.up', ics_url: 'http://example.org/example.ics'
   end
 

@@ -14,6 +14,15 @@ class SyncService
     end
   end
 
+  def valid_ics?(url)
+    begin
+      Icalendar.parse RestClient.get(url).body
+      true
+    rescue
+      false
+    end
+  end
+
   private
 
   def create_update_bookings(sync, events)

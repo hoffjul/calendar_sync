@@ -81,11 +81,17 @@ class CobotIcalSync < Sinatra::Base
   end
 
   post '/spaces/:subdomain/synchronization' do
-    space = current_user.space(params[:subdomain])
-    Synchronization.create! ics_url: params[:ics_url], resource_id: params[:resource_id],
-      subdomain: space.subdomain,
-      access_token: space.access_token
-    redirect "/spaces/#{params[:subdomain]}"
+    @space = current_user.space(params[:subdomain])
+    if SyncService.new.valid_ics?(params[:ics_url])
+      Synchronization.create! ics_url: params[:ics_url], resource_id: params[:resource_id],
+        subdomain: @space.subdomain, access_token: @space.access_token
+      redirect "/spaces/#{params[:subdomain]}"
+    else
+      @error = "The URL you entered is not a valid calendar file."
+      @synchronizations = @space.synchronizations
+      @resources = @space.resources
+      erb :space
+    end
   end
 
   delete '/synchronizations/:id' do
