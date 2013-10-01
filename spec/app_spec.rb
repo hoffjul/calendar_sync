@@ -19,4 +19,14 @@ describe 'health endpoint' do
     expect(last_response.status).to eql(302)
     expect(last_response['Location']).to eql('http://example.org/')
   end
+
+  it 'logs me out' do
+    stub_cobot_user
+    log_in
+
+    click_link 'Log out'
+
+    expect(page).to have_content('Log in')
+    expect(page).to have_no_content('Log out')
+  end
 end

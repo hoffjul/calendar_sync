@@ -54,6 +54,11 @@ class CobotIcalSync < Sinatra::Base
     erb :home
   end
 
+  get '/log_out' do
+    session.clear
+    redirect '/'
+  end
+
   get '/help' do
     erb :help
   end
