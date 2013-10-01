@@ -30,6 +30,7 @@
               <li><a href="/">Home</a></li>
               <% if current_user %>
                 <li><a href="/spaces">Spaces</a></li>
+                <li><a href="/help">Help</a></li>
               <% end %>
             </ul>
           </div><!--/.nav-collapse -->
@@ -37,18 +38,8 @@
       </div>
     </div><!-- /navbar -->
 
-  <div class="container">
-    <!--div class="content-wrap">
-      <div class="row  padded"-->
-        <%= yield %>
-      <!--/div--><!-- /row -->
-
-
-
-      </div><!-- /content-wrap -->
-
-  </div> <!-- /container -->
-
-
+    <div class="container">
+      <%= yield %>
+    </div> <!-- /container -->
   </body>
 </html>

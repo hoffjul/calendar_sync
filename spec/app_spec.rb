@@ -7,6 +7,12 @@ describe 'health endpoint' do
     expect(last_response.status).to eql(200)
   end
 
+  it 'renders help' do
+    get '/help'
+
+    expect(last_response.status).to eql(200)
+  end
+
   it 'requires a login' do
     get '/spaces/123'
 

@@ -41,7 +41,7 @@ class CobotIcalSync < Sinatra::Base
 
   before do
     if !current_user &&
-      [%r{^/health$}, %r{^/auth/*}, %r{^/$}].none?{|regex| request.path_info =~ regex}
+      [%r{^/health$}, %r{^/help$}, %r{^/auth/*}, %r{^/$}].none?{|regex| request.path_info =~ regex}
       redirect '/'
     end
   end
@@ -52,6 +52,10 @@ class CobotIcalSync < Sinatra::Base
 
   get '/' do
     erb :home
+  end
+
+  get '/help' do
+    erb :help
   end
 
   get '/auth/:provider/callback' do
