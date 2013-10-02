@@ -4,14 +4,14 @@ require 'rest_client'
 class SyncService
   def sync_all
     Synchronization.all.each do |sync|
-      # begin
+      begin
         text = RestClient.get(sync.ics_url).body
         cal = Icalendar.parse(text).first
         create_update_bookings sync, cal.events
         remove_deleted_bookings sync, cal.events
-      # rescue => e
-      #   Raven.capture_exception(e)
-      # end
+      rescue => e
+        Raven.capture_exception(e)
+      end
     end
   end
 
