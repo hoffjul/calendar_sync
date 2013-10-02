@@ -36,6 +36,23 @@ describe 'syncing a calendar' do
           to: '2013-10-19T23:59:59+00:00'})).to have_been_made
   end
 
+  it 'ignores cobot 422 errors, i.e. conflicting bookings' do
+    stub_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')
+      .with(body: hash_including(title: 'conflict'))
+      .to_return(
+        status: 422, body: {}.to_json)
+
+    sync_ics 'two_bookings.ics'
+
+    expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')
+      .with(
+        headers: {'Authorization' => 'Bearer token-123'},
+        body: {
+          title: 'Important meeting',
+          from: '2013-09-30T08:00:00+00:00',
+          to: '2013-09-30T09:00:00+00:00'})).to have_been_made
+  end
+
   it 'removes removed bookings' do
     Timecop.travel 2013, 9, 20 do
       stub_request(:delete, %r{api/bookings})

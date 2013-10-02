@@ -4,14 +4,14 @@ require 'rest_client'
 class SyncService
   def sync_all
     Synchronization.all.each do |sync|
-      begin
+      # begin
         text = RestClient.get(sync.ics_url).body
         cal = Icalendar.parse(text).first
         create_update_bookings sync, cal.events
         remove_deleted_bookings sync, cal.events
-      rescue => e
-        Raven.capture_exception(e)
-      end
+      # rescue => e
+      #   Raven.capture_exception(e)
+      # end
     end
   end
 
@@ -46,10 +46,14 @@ class SyncService
   end
 
   def create_booking(sync, event)
-    cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
-      booking_attributes(event)
-    sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
-      }.merge(booking_attributes(event)))
+    begin
+      cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
+        booking_attributes(event)
+      sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
+        }.merge(booking_attributes(event)))
+    rescue RestClient::UnprocessableEntity
+      # ignore booking conflicts
+    end
   end
 
   def booking_attributes(event)
