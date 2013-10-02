@@ -9,6 +9,6 @@ rescue LoadError
   puts "Could not load RSpec."
 end
 
-task :update_cache do
-  Space.all.each(&:update_memberships_cache)
+task :sync_calendars do
+  SyncService.new.sync_all
 end

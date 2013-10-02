@@ -1,4 +1,5 @@
 require 'icalendar'
+require 'rest_client'
 
 class SyncService
   def sync_all
