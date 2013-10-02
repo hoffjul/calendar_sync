@@ -24,6 +24,18 @@ describe 'syncing a calendar' do
           to: '2013-09-30T09:00:00+00:00'})).to have_been_made
   end
 
+  it 'adds all day events' do
+    sync_ics 'all_day.ics'
+
+    expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')
+      .with(
+        headers: {'Authorization' => 'Bearer token-123'},
+        body: {
+          title: 'Long meeting',
+          from: '2013-10-17T00:00:00+00:00',
+          to: '2013-10-19T23:59:59+00:00'})).to have_been_made
+  end
+
   it 'removes removed bookings' do
     Timecop.travel 2013, 9, 20 do
       stub_request(:delete, %r{api/bookings})

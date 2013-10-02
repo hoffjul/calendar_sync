@@ -54,10 +54,18 @@ class SyncService
 
   def booking_attributes(event)
     {
-      from: event.start.utc.iso8601,
-      to: event.end.utc.iso8601,
+      from: format_time(event.start, :beginning),
+      to: format_time(event.end, :end),
       title: event.summary
     }
+  end
+
+  def format_time(date_or_time, beginning_or_end)
+    if date_or_time.is_a?(DateTime)
+      date_or_time
+    else
+      DateTime.parse("#{date_or_time.to_s} 00:00:00 +0000").utc.send("#{beginning_or_end}_of_day")
+    end.utc.iso8601
   end
 
   def remove_deleted_bookings(sync, events)
