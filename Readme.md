@@ -1,5 +1,7 @@
 This app syncs calendars to the Cobot booking calendar. You need to provide an `.ics` feed URL and a resource on Cobot. This app will then create bookings on that resource for each of the events on the calendar.
 
+The offical instance is hosted at https://calendar-sync.apps.cobot.me
+
 # Deployment
 
 Needs a postgres database configured via ENV[DATABASE_URL].
