@@ -10,13 +10,15 @@ Dir['lib/*.rb'].each do |file|
   require_relative file
 end
 
-ActiveRecord::Base.logger.level = Logger::WARN
-
 class CobotIcalSync < Sinatra::Base
   layout 'layout'
   configure(:production) do
     set :cookie_secret, ENV['COOKIE_SECRET']
     use Raven::Rack
+  end
+
+  configure do
+    ActiveRecord::Base.logger.level = Logger::WARN
   end
 
   configure(:development) do
