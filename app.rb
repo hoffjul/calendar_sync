@@ -10,6 +10,8 @@ Dir['lib/*.rb'].each do |file|
   require_relative file
 end
 
+ActiveRecord::Base.logger.level = Logger::WARN
+
 class CobotIcalSync < Sinatra::Base
   layout 'layout'
   configure(:production) do
