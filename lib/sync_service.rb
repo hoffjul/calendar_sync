@@ -44,26 +44,31 @@ class SyncService
 
   def update_booking(sync, event, booking)
     if booking.event_changed?(event)
-      debug "updating booking #{booking.title} with #{booking_attributes(event).inspect}"
-      cobot(sync).update_booking sync.subdomain, booking.cobot_id,
-        booking_attributes(event)
-      booking.update_attributes booking_attributes(event)
+      begin
+        debug "updating booking #{booking.title} with #{booking_attributes(event).inspect}"
+        cobot(sync).update_booking sync.subdomain, booking.cobot_id,
+          booking_attributes(event)
+        booking.update_attributes booking_attributes(event)
+      rescue RestClient::UnprocessableEntity => e
+        debug "error updating booking: #{e.message}"
+        # ignore booking conflicts
+      end
     else
       debug "not updating booking #{booking.title}"
     end
   end
 
   def create_booking(sync, event)
-    # begin
+    begin
       debug "creating booking #{event.summary}"
       cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
         booking_attributes(event)
       sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
         }.merge(booking_attributes(event)))
-
-    # rescue RestClient::UnprocessableEntity
+    rescue RestClient::UnprocessableEntity => e
+      debug "error creating booking: #{e.message}"
       # ignore booking conflicts
-    # end
+    end
   end
 
   def booking_attributes(event)

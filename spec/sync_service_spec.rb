@@ -13,20 +13,4 @@ describe SyncService, '#sync_all' do
 
     service.sync_all
   end
-
-  it 'ignores 422 errors, i.e. conflicting bookings on create' do
-    RestClient.stub(:get) { double.as_null_object }
-    Icalendar.stub(:parse) { [double(:calendar, events: [double(:event1).as_null_object,
-      double(:event2).as_null_object])] }
-    RestClient.stub(:post).with('ics1').and_raise('xyz')
-    sync = double(:sync, bookings: double(:bookings, where: [])).as_null_object
-    Synchronization.stub(all: [sync])
-    cobot_client = double(:api_client)
-    CobotClient::ApiClient.stub(new: cobot_client)
-    cobot_client.stub(:create_booking).and_raise(RestClient::UnprocessableEntity)
-
-    service.sync_all
-  end
-
-  it 'ignores 422 errors, i.e. conflicting bookings on update'
 end
