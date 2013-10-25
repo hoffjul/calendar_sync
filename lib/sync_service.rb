@@ -90,7 +90,12 @@ class SyncService
   def remove_deleted_bookings(sync, events)
     sync.bookings.upcoming.each do |booking|
       unless events.map(&:uid).include?(booking.uid)
-        cobot(sync).delete_booking sync.subdomain, booking.cobot_id
+        begin
+          debug "deleting booking #{booking.title}"
+          cobot(sync).delete_booking sync.subdomain, booking.cobot_id
+        rescue RestClient::ResourceNotFound
+          debug "booking already deleted"
+        end
       end
     end
   end
