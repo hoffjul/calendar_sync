@@ -34,10 +34,14 @@ class SyncService
   def create_update_bookings(sync, events)
     bookings = sync.bookings.where(uid: events.map(&:uid))
     events.each do |event|
-      if booking = bookings.find{|b| b.uid == event.uid}
-        update_booking sync, event, booking
-      else
-        create_booking sync, event
+      begin
+        if booking = bookings.find{|b| b.uid == event.uid}
+          update_booking sync, event, booking
+        else
+          create_booking sync, event
+        end
+      rescue RestClient::ResourceNotFound
+        sync.destroy # resource was deleted on Cobot
       end
     end
   end

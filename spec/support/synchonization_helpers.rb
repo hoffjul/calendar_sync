@@ -7,6 +7,12 @@ module SynchronizationHelpers
     click_button 'Sync Calendar'
   end
 
+  def sync_ics(filename)
+    stub_request(:get, 'http://example.org/example.ics')
+      .to_return(body: File.read("spec/fixtures/#{filename}"))
+    SyncService.new.sync_all
+  end
+
   def stub_ics
     stub_request(:get, 'http://example.org/example.ics').to_return(
       body: File.read('spec/fixtures/example.ics'))
