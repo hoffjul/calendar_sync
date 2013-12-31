@@ -8,11 +8,12 @@ class SyncService
     Synchronization.all.each do |sync|
       debug "Syncing #{sync.ics_url} for #{sync.subdomain}"
       begin
-        text = RestClient.get(sync.ics_url).body
-        cal = Icalendar.parse(text).first
-        debug "Found #{cal.events.size} events."
-        create_update_bookings sync, cal.events
-        remove_deleted_bookings sync, cal.events
+        if text = load_ics(sync)
+          cal = Icalendar.parse(text).first
+          debug "Found #{cal.events.size} events."
+          create_update_bookings sync, cal.events
+          remove_deleted_bookings sync, cal.events
+        end
       rescue => e
         debug "Error: #{e.message}"
         Raven.capture_exception(e)
@@ -30,6 +31,13 @@ class SyncService
   end
 
   private
+
+  def load_ics(sync)
+    begin
+      RestClient.get(sync.ics_url).body
+    rescue RestClient::ResourceNotFound
+    end
+  end
 
   def create_update_bookings(sync, events)
     bookings = sync.bookings.where(uid: events.map(&:uid))
