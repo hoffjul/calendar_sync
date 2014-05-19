@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.1.2'
 
 gem 'sinatra'
 gem 'json'
@@ -13,7 +13,7 @@ gem 'sinatra-activerecord'
 gem 'omniauth'
 gem 'omniauth_cobot'
 gem 'icalendar'
-gem 'cobot_client', '~>0.5.0'
+gem 'cobot_client', '~>0.7.0'
 
 group :production do
   gem 'thin'

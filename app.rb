@@ -10,6 +10,8 @@ Dir['lib/*.rb'].each do |file|
   require_relative file
 end
 
+CobotClient::ApiClient.user_agent = 'Cobot iCal Sync'
+
 class CobotIcalSync < Sinatra::Base
   layout 'layout'
   configure(:production) do
