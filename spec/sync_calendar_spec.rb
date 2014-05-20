@@ -7,12 +7,17 @@ describe 'syncing a calendar' do
     stub_cobot_resources 'co-up', [{id: 'meeting-room', name: 'Meeting Room'}]
     stub_request(:post, %r{api/resources/meeting-room/bookings}).to_return(
       body: {id: 'booking-123'}.to_json)
+    stub_request(:get, %r{api/bookings}).to_return(body: [].to_json)
     log_in
     stub_ics
     enable_sync 'co.up', ics_url: 'http://example.org/example.ics'
   end
 
   it 'adds new bookings' do
+    stub_request(:get, %r{api/bookings}).to_return(body: [
+      {from: "2013/09/30 09:00:00 +0000", to: "2013/09/30 10:00:00 +0000", resource: {id: "meeting-room"}}
+    ].to_json)
+
     sync_ics 'example.ics'
 
     expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')
@@ -76,5 +81,14 @@ describe 'syncing a calendar' do
 
     expect(a_request(:put,
       'https://co-up.cobot.me/api/bookings/booking-123')).to_not have_been_made
+  end
+
+  it 'does not add bookings that would conflict with existing bookings' do
+    stub_request(:get, 'https://co-up.cobot.me/api/bookings?from=2012-01-01T11:00:00%2B00:00&to=2012-01-01T14:30:00%2B00:00').to_return(body: [
+      {from: "2012/01/01 12:00:00 +0000", to: "2012/01/01 14:00:00 +0000", resource: {id: "meeting-room"}}
+    ].to_json)
+    sync_ics 'conflicts.ics'
+
+    expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')).to_not have_been_made
   end
 end

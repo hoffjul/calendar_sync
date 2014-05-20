@@ -41,12 +41,13 @@ class SyncService
 
   def create_update_bookings(sync, events)
     bookings = sync.bookings.where(uid: events.map(&:uid))
+    cobot_bookings = get_cobot_bookings(sync, events)
     events.each do |event|
       begin
         if booking = bookings.find{|b| b.uid == event.uid}
           update_booking sync, event, booking
         else
-          create_booking sync, event
+          create_booking sync, event, cobot_bookings
         end
       rescue RestClient::ResourceNotFound
         sync.destroy # resource was deleted on Cobot
@@ -70,17 +71,37 @@ class SyncService
     end
   end
 
-  def create_booking(sync, event)
+  def create_booking(sync, event, cobot_bookings)
     begin
       debug "creating booking #{event.summary}"
-      cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
-        booking_attributes(event)
-      sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
-        }.merge(booking_attributes(event)))
+      unless would_conflict?(event, cobot_bookings, sync.resource_id)
+        cobot_booking = cobot(sync).create_booking sync.subdomain, sync.resource_id,
+          booking_attributes(event)
+        sync.bookings.create!({cobot_id: cobot_booking[:id], uid: event.uid
+          }.merge(booking_attributes(event)))
+      end
     rescue RestClient::UnprocessableEntity => e
       debug "error creating booking: #{e.message}"
       # ignore booking conflicts
     end
+  end
+
+  def would_conflict?(event, cobot_bookings, resource_id)
+    from = booking_attributes(event)[:from]
+    to = booking_attributes(event)[:to]
+    cobot_bookings.select{|b| b[:resource][:id] == resource_id}.
+      map{|b| Time.parse(b[:from])..Time.parse(b[:to])}.find do |range|
+        from < range.first && to > range.end ||
+        from < range.first && to > range.first ||
+        from < range.end && to > range.end ||
+        from > range.first && to < range.end
+    end
+  end
+
+  def get_cobot_bookings(sync, events)
+    cobot(sync).get sync.subdomain, '/bookings',
+      from: events.map{|e| format_time(e.start, :beginning)}.sort.first,
+      to: events.map{|e| format_time(e.end, :end)}.sort.last
   end
 
   def booking_attributes(event)

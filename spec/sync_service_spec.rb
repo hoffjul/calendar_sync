@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe SyncService, '#sync_all' do
   let(:service) { SyncService.new }
+  
   before(:each) do
     CobotClient::ApiClient.stub(new: double.as_null_object)
   end

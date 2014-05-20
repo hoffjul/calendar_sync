@@ -7,6 +7,7 @@ describe 'handling a deleted resource' do
     stub_cobot_resources 'co-up', [{id: 'meeting-room', name: 'Meeting Room'}]
     stub_request(:post, %r{api/resources/meeting-room/bookings}).to_return(
       body: {}.to_json, status: 404)
+    stub_request(:get, %r{api/bookings}).to_return(body: [].to_json)
     log_in
     stub_ics
     enable_sync 'co.up', ics_url: 'http://example.org/example.ics'

@@ -12,3 +12,5 @@ RSpec.configure do |c|
     CobotIcalSync.new
   end
 end
+
+ActiveRecord::Base.logger.level = Logger::WARN
