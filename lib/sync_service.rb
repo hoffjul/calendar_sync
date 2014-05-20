@@ -9,7 +9,7 @@ class SyncService
       debug "Syncing #{sync.ics_url} for #{sync.subdomain}"
       begin
         if text = load_ics(sync)
-          cal = Icalendar.parse(text).first
+          cal = Icalendar::Parser.new(text, false).parse.first
           debug "Found #{cal.events.size} events."
           create_update_bookings sync, cal.events
           remove_deleted_bookings sync, cal.events
