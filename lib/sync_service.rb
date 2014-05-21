@@ -99,9 +99,13 @@ class SyncService
   end
 
   def get_cobot_bookings(sync, events)
-    cobot(sync).get sync.subdomain, '/bookings',
-      from: events.map{|e| format_time(e.start, :beginning)}.sort.first,
-      to: events.map{|e| format_time(e.end, :end)}.sort.last
+    if events.any?
+      cobot(sync).get sync.subdomain, '/bookings',
+        from: events.map{|e| format_time(e.start, :beginning)}.sort.first,
+        to: events.map{|e| format_time(e.end, :end)}.sort.last
+    else
+      []
+    end
   end
 
   def booking_attributes(event)

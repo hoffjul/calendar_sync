@@ -91,4 +91,10 @@ describe 'syncing a calendar' do
 
     expect(a_request(:post, 'https://co-up.cobot.me/api/resources/meeting-room/bookings')).to_not have_been_made
   end
+
+  it 'does not try to get bookings if calendar is empty' do
+    sync_ics 'empty.ics'
+
+    expect(a_request(:get, %r{/api/bookings})).to_not have_been_made
+  end
 end
