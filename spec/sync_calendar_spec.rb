@@ -97,4 +97,12 @@ describe 'syncing a calendar' do
 
     expect(a_request(:get, %r{/api/bookings})).to_not have_been_made
   end
+
+  it 'stops syncing if getting the bookings returns 404, i.e. the space has been deleted' do
+    stub_request(:get, %r{api/bookings}).to_return(status: 404)
+
+    2.times { sync_ics 'example.ics' }
+
+    expect(a_request(:get, %r{/api/bookings})).to have_been_made.once
+  end
 end
