@@ -23,27 +23,27 @@
 
 <p>After filling out the form below we will start synchonizing the events from your calendar to the specified resource on your Cobot booking calendar.</p>
 
-<% if @error %>
-  <p class="alert alert-error"><%= @error %></p>
-<% end %>
-
 <% if @resources.any? %>
   <form action="/spaces/<%= @space.subdomain %>/synchronization" method="POST">
-    <p>
+    <div class="control-group <%= 'error' if @synchronization.errors[:ics_url] %>">
       <label for="ics_url">Calendar URL</label>
-      <input type="url" required id="ics_url" name="ics_url" value="<%= params[:ics_url] %>"/>
-      <span class="hint">The URL to an ics feed. <a href="/help">help</a></span>
-    </p>
-    <p>
+      <input type="url" required id="ics_url" name="ics_url" value="<%= @synchronization.ics_url %>"/>
+      <% if @synchronization.errors[:ics_url] %>
+        <span class="inline-help"><%= @synchronization.errors[:ics_url].join(', ') %></span>
+      <% else %>
+        <span class="hint">The URL to an ics feed. <a href="/help">help</a></span>
+      <% end %>
+    </div>
+    <div class="control-group">
       <label for="resource_id">Resource</label>
       <select id="resource_id" name="resource_id" value="<%= params[:resource_id] %>" required>
         <% @resources.each do |resource| %>
-          <option value="<%= resource.id %>"><%= resource.name %></option>
+          <option value="<%= resource.id %>" <%= 'selected' if @synchronization.resource_id == resource.id %>><%= resource.name %></option>
         <% end %>
       </select>
       <span class="hint">Select the booking calendar resource to add the bookings to.</span>
-    </p>
-    <p><input type="submit" class="btn btn-primary" value="Sync Calendar"/></p>
+    </div>
+    <div class="control-group"><input type="submit" class="btn btn-primary" value="Sync Calendar"/></div>
   </form>
 <% else %>
   <p class="alert">Before you can sync a calendar you have to set up a booking calendar resource on Cobot. You can do this on Cobot under Setup -> Booking Calendar.</p>

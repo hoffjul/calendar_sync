@@ -22,7 +22,13 @@ describe 'enable syncing' do
       body: 'abc;xyz')
     enable_sync 'co.up', ics_url: 'http://example.com/invalid.csv'
 
-    expect(page).to have_content('The URL you entered is not a valid calendar file.')
+    expect(page).to have_content('is not a valid calendar file')
+  end
+
+  it 'returns an error when the url points to cobot' do
+    enable_sync 'co.up', ics_url: 'http://cobot.me/feed.ics'
+
+    expect(page).to have_content('cannot sync Cobot with itself')
   end
 
   it 'lets a space admin disable a space' do
