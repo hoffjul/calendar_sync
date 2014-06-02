@@ -29,7 +29,7 @@
       <label for="ics_url">Calendar URL</label>
       <input type="url" required id="ics_url" name="ics_url" value="<%= @synchronization.ics_url %>"/>
       <% if @synchronization.errors[:ics_url] %>
-        <span class="inline-help"><%= @synchronization.errors[:ics_url].join(', ') %></span>
+        <span class="help-inline"><%= @synchronization.errors[:ics_url].join(', ') %></span>
       <% else %>
         <span class="hint">The URL to an ics feed. <a href="/help">help</a></span>
       <% end %>
